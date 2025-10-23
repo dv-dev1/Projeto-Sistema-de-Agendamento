@@ -21,7 +21,11 @@ import professionalRoutes from "./routes/professional.routes";
 app.use("/api/professionals", professionalRoutes);
 
 import appointmentRoutes from "./routes/appointment.routes";
+
 app.use("/api/appointments", appointmentRoutes);
+
+import availabilityRoutes from "./routes/availability.routes";
+app.use("/api/availability", availabilityRoutes);
 
 const PORT = process.env.PORT || 3333;
 
