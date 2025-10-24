@@ -1,4 +1,3 @@
-```
 import { Request, Response } from "express";
 import Service, { IService } from "../models/Service.model";
 
@@ -6,7 +5,12 @@ import Service, { IService } from "../models/Service.model";
 export async function createService(req: Request, res: Response) {
   try {
     const { name, description, price, duration } = req.body;
-    const service = await Service.create({ name, description, price, duration });
+    const service = await Service.create({
+      name,
+      description,
+      price,
+      duration,
+    });
     return res.status(201).json(service);
   } catch (error) {
     return res.status(500).json({ message: "Erro ao criar serviço", error });
@@ -48,7 +52,7 @@ export async function updateService(req: Request, res: Response) {
     const updated = await Service.findByIdAndUpdate(
       id,
       { name, description, price, duration },
-      { new: true }
+      { new: true },
     );
 
     if (!updated) {
@@ -57,7 +61,9 @@ export async function updateService(req: Request, res: Response) {
 
     return res.status(200).json(updated);
   } catch (error) {
-    return res.status(500).json({ message: "Erro ao atualizar serviço", error });
+    return res
+      .status(500)
+      .json({ message: "Erro ao atualizar serviço", error });
   }
 }
 

@@ -37,11 +37,14 @@ export async function createAppointment(req: Request, res: Response) {
           endTime: { $gt: startDate },
         },
       ],
-      status: { $ne: "cancelled" }
+      status: { $ne: "cancelled" },
     });
 
     if (conflicting) {
-      return res.status(409).json({ message: "Este horário não está mais disponível para o profissional selecionado." });
+      return res.status(409).json({
+        message:
+          "Este horário não está mais disponível para o profissional selecionado.",
+      });
     }
 
     // Criar o agendamento
@@ -51,12 +54,14 @@ export async function createAppointment(req: Request, res: Response) {
       service,
       startTime: startDate,
       endTime: endDate,
-      status: 'confirmed'
+      status: "confirmed",
     });
 
     return res.status(201).json(appointment);
   } catch (error) {
-    return res.status(500).json({ message: "Erro ao criar agendamento.", error });
+    return res
+      .status(500)
+      .json({ message: "Erro ao criar agendamento.", error });
   }
 }
 
@@ -72,18 +77,73 @@ export async function getMyAppointments(req: Request, res: Response) {
       .populate({
         path: "professional",
         populate: {
-          path: "user", // trazer dados do usuário ligado ao professional
-          select: "name email"
-        }
+          path: "user",
+          select: "name email",
+        },
       })
       .populate({
         path: "service",
-        select: "name price duration"
+        select: "name price duration",
       })
       .sort({ startTime: -1 });
 
     return res.status(200).json(appointments);
   } catch (error) {
-    return res.status(500).json({ message: "Erro ao buscar agendamentos.", error });
+    return res
+      .status(500)
+      .json({ message: "Erro ao buscar agendamentos.", error });
   }
 }
+
+// Atualizar agendamento (remarcar)
+export const updateAppointment = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const { startTime } = req.body;
+
+    if (!startTime)
+      return res.status(400).json({ message: "Data/hora obrigatória." });
+
+    // Encontra o agendamento
+    const appointment = await Appointment.findById(id);
+    if (!appointment)
+      return res.status(404).json({ message: "Agendamento não encontrado." });
+
+    // Buscar a duração do serviço para recalcular endTime
+    const service = await Service.findById(appointment.service);
+    if (!service)
+      return res
+        .status(404)
+        .json({ message: "Serviço do agendamento não encontrado." });
+
+    appointment.startTime = new Date(startTime);
+    // Recalcula endTime
+    appointment.endTime = new Date(appointment.startTime);
+    appointment.endTime.setMinutes(
+      appointment.endTime.getMinutes() + service.duration,
+    );
+
+    await appointment.save();
+    res.json(appointment);
+  } catch (error) {
+    res.status(400).json({ message: "Erro ao remarcar." });
+  }
+};
+
+// Cancelar agendamento
+export const cancelAppointment = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const appointment = await Appointment.findByIdAndUpdate(
+      id,
+      { status: "cancelled" },
+      { new: true },
+    );
+    if (!appointment) {
+      return res.status(404).json({ message: "Agendamento não encontrado." });
+    }
+    res.json(appointment);
+  } catch (error) {
+    res.status(500).json({ message: "Erro ao cancelar agendamento." });
+  }
+};
