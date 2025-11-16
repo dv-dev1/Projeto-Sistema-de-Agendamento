@@ -1,40 +1,85 @@
-API Agendamento - Backend
-Este projeto é uma API REST desenvolvida em Node.js, Express e TypeScript para gerenciamento de agendamentos de serviços profissionais. Ele faz parte do sistema AgendaPro, que inclui também um frontend em React/Vite.
+API de Agendamento (Backend)
+Bem-vindo ao backend do AgendaPro! Este projeto é o cérebro por trás do nosso sistema de agendamento, uma API REST completa construída com Node.js, Express e TypeScript.
 
-Funcionalidades
-Cadastro e autenticação de usuários (JWT)
-Cadastro de serviços com nome, descrição, preço e duração
-Cadastro de profissionais vinculados a usuários e serviços
-Definição de horários de disponibilidade dos profissionais
-Agendamento de serviços com profissionais
-Listagem de agendamentos, serviços e profissionais
-Proteção de rotas via autenticação
-Tecnologias
-Node.js
-Express
-TypeScript
-MongoDB Atlas (Mongoose)
-JWT para autenticação
-Dotenv para variáveis de ambiente
-Como rodar
-Instale as dependências:
+Ele foi projetado para gerenciar tudo, desde usuários e profissionais até os serviços e seus horários. Este backend fornece todos os dados necessários para o nosso Frontend em React/Vite.
+
+Funcionalidades Principais
+Aqui está o que esta API pode fazer:
+
+Autenticação Segura: Cadastro e login de usuários usando Tokens JWT (JSON Web Token).
+
+Gerenciamento de Serviços: Permite cadastrar serviços com nome, descrição, preço e duração.
+
+Cadastro de Profissionais: Vincula profissionais a usuários e aos serviços que eles oferecem.
+
+Controle de Disponibilidade: Permite que profissionais definam seus horários de trabalho.
+
+Sistema de Agendamento: O coração da API, permitindo que clientes marquem horários com profissionais para serviços específicos.
+
+Listagem de Dados: Fornece rotas para listar agendamentos, serviços e profissionais.
+
+Rotas Protegidas: Garante que apenas usuários autenticados possam acessar ou modificar dados sensíveis.
+
+Tecnologias Utilizadas
+Este projeto foi construído com algumas das tecnologias mais modernas do ecossistema Node.js:
+
+Node.js: O ambiente de execução do nosso JavaScript no backend.
+
+Express: O framework que nos ajuda a construir e organizar as rotas da API.
+
+TypeScript: Para adicionar tipos ao JavaScript, tornando o código mais robusto e fácil de manter.
+
+MongoDB (com Mongoose): Nosso banco de dados NoSQL (rodando no Atlas) para armazenar tudo.
+
+JWT (jsonwebtoken): Para criar e verificar os tokens de autenticação.
+
+Dotenv: Para gerenciar nossas variáveis de ambiente e senhas com segurança.
+
+Como Rodar o Projeto Localmente
+Quer testar a API na sua máquina? É só seguir estes passos:
+
+Instale as Dependências: Abra o terminal na pasta do projeto e rode:
+
+Bash
 
 npm install
-Configure o arquivo .env com sua URI do MongoDB Atlas e uma chave JWT:
+Configure suas Variáveis de Ambiente: Crie um arquivo chamado .env na raiz do projeto. Ele precisa das seguintes chaves (substitua pelos seus valores):
 
-MONGODB_URI=...JWT_SECRET=...PORT=3333
-Inicie o servidor:
+Snippet de código
+
+# String de conexão do seu banco de dados no MongoDB Atlas
+MONGODB_URI=mongodb+srv://...
+
+# Chave secreta para gerar seus tokens JWT (pode ser qualquer string longa)
+JWT_SECRET=sua_chave_secreta_aqui
+
+# Porta onde o servidor vai rodar
+PORT=3333
+Inicie o Servidor: Com tudo configurado, basta rodar:
+
+Bash
 
 npm run dev
-Endpoints principais
-POST /api/auth/register — Cadastro de usuário
-POST /api/auth/login — Login e obtenção do token JWT
-POST /api/services — Cadastro de serviço (autenticado)
-POST /api/professionals — Cadastro de profissional (autenticado)
-GET /api/services — Listagem de serviços
-GET /api/professionals — Listagem de profissionais
-POST /api/appointments — Agendar serviço
-Observações
-O backend exige autenticação JWT para rotas protegidas.
-O frontend consome esta API e permite agendar serviços, visualizar profissionais e gerenciar agendamentos.
-O projeto é ideal para demonstração de sistemas de agendamento online.
+E pronto! O servidor estará rodando (geralmente na http://localhost:3333).
+
+🗺️ Endpoints Principais (Rotas da API)
+Aqui estão algumas das rotas mais importantes que você pode testar:
+
+POST /api/auth/register — Cria um novo usuário.
+
+POST /api/auth/login — Faz o login e retorna um token JWT.
+
+GET /api/services — Lista todos os serviços.
+
+GET /api/professionals — Lista todos os profissionais.
+
+POST /api/services — Cadastra um novo serviço (Exige autenticação).
+
+POST /api/professionals — Cadastra um novo profissional (Exige autenticação).
+
+POST /api/appointments — Cria um novo agendamento (Exige autenticação).
+
+❗ Observações Importantes
+Autenticação: Lembre-se de que a maioria das rotas POST (e outras rotas sensíveis) são protegidas. Você precisará obter um token JWT na rota de login e enviá-lo no cabeçalho Authorization (como Bearer seu-token-aqui) em suas requisições.
+
+Frontend: Esta API foi feita para ser consumida pelo nosso frontend, que cuida da interface de usuário e da experiência de agendamento.
