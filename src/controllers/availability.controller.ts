@@ -38,7 +38,7 @@ function hasConflict(
 }
 
 /**
- * Checa se o slot está DENTRO do intervalo da pausa (break)
+ * Checa se o slot está DENTRO do intervalo da pausa
  * Considera ambas as pontas inclusivas
  */
 function isInBreak(
